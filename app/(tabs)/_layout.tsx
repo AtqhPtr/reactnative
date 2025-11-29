@@ -30,6 +30,35 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="mahasiswa"
+        options={{
+          title: 'Mahasiswa',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="graduationcap.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="lokasi"
+        options={{
+          title: 'List Data',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="list.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="mapwebview"
+        options={{
+          title: 'Leaflet Map',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="map.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="gmap"
+        options={{
+          title: 'Gmap',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="gmap.fill" color={color} />,
+        }}
+      />
+      
     </Tabs>
   );
 }

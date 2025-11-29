@@ -10,30 +10,49 @@ import { Link } from 'expo-router';
 export default function HomeScreen() {
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+      headerBackgroundColor={{ light: '#A1CEDC', dark: '#eae0e0ff' }}
       headerImage={
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
+          source={require('@/assets/images/ugm.png')}
           style={styles.reactLogo}
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <ThemedText type="title" style={styles.title}>Selamat Datang!</ThemedText>
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
+        <ThemedText type="subtitle">Nama</ThemedText>
         <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
+          Atika Putri Istiqomah
+        </ThemedText>
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">NIM</ThemedText>
+        <ThemedText>
+          23/514612/SV/22392
+        </ThemedText>
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Kelas</ThemedText>
+        <ThemedText>
+          B
+        </ThemedText>
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Mata Kuliah</ThemedText>
+        <ThemedText>
+          Praktikum Pemrograman Geospasial Perangkat Bergerak: Lanjut
+        </ThemedText>
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Aplikasi</ThemedText>
+        <ThemedText>
+          Aplikasi ini dijalankan di perangkat <ThemedText type="defaultSemiBold">{Platform.select({
+            ios: 'iOS',
+            android: 'Android',
+            web: 'Web',
+          })}</ThemedText> menggunakan React Native dan Expo.
         </ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
@@ -89,10 +108,16 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   reactLogo: {
-    height: 178,
-    width: 290,
+    height: 180,
+    width: 280,
     bottom: 0,
-    left: 0,
+    top: 10,
+    left: 10,
     position: 'absolute',
   },
+  title: {
+    color:'green',
+    fontWeight: 'bold',
+    fontSize: 32,
+  }
 });
