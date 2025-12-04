@@ -1,50 +1,66 @@
-# Welcome to your Expo app 👋
+# Welcome to PinMeUp🗺️
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+PinMeUp merupakan sebuah aplikasi mobile yang membantu pengguna menyimpan, menandai, dan mengelola lokasi favorit secara praktis langsung di peta. Cocok untuk kebutuhan kuliner, wisata, sekolah, hingga perencanaan perjalanan.
 
-## Get started
+# Deskripsi Produk📌
+PinMeUp dirancang untuk memudahkan pengguna membuat catatan lokasi dan menyimpannya sebagai titik favorit pada peta interaktif. Dengan tampilan yang sederhana dan intuitif, pengguna dapat menambah titik baru, mengatur rencana perjalanan, melihat daftar lokasi tersimpan, hingga melakukan navigasi ke lokasi tersebut.
 
-1. Install dependencies
+# Fitur Utama⭐
+| Fitur               | Deskripsi                                                   |
+| ------------------- | ----------------------------------------------------------- |
+| **Planner**         | Mengatur rencana kunjungan dengan tanggal & catatan.        |
+| **Favorite**        | Menampilkan daftar lokasi favorit yang telah disimpan.      |
+| **New Note**        | Menambah catatan baru sekaligus menandai lokasi baru.       |
+| **Simpan Lokasi**   | Menambahkan titik favorit langsung pada peta.               |
+| **Peta Interaktif** | Menampilkan peta yang dapat diberi marker secara langsung.  |
+| **Kelola Titik**    | Mengedit atau menghapus titik kapan saja.                   |
+| **Navigasi Lokasi** | Mengarahkan pengguna menuju lokasi melalui sistem navigasi. |
+
+# Komponen Pembangun Produk🧩
+| Komponen                            | Fungsi                                                    |
+| ----------------------------------- | --------------------------------------------------------- |
+| **React Native (Expo)**             | Framework utama untuk membangun aplikasi.                 |
+| **Expo Router**                     | Mengatur navigasi antar halaman.                          |
+| **Firebase Realtime Database**      | Penyimpanan data lokasi secara online.                    |
+| **Expo Location**                   | Mengambil lokasi real-time pengguna.                      |
+| **React Native Maps / Map Service** | Menampilkan peta dan marker interaktif.                   |
+| **Custom Components**               | Komponen UI seperti ThemedText, Card, Button, dan navbar. |
+
+# Sumber Data🌐
+- Firebase Realtime Database sebagai database utama untuk menyimpan lokasi dan catatan.
+- GPS (Expo Location) untuk mendapatkan posisi pengguna.
+- Input manual pengguna untuk nama lokasi, deskripsi, kategori, dan catatan.
+
+# Tangkapan Layar Produk📸
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b0927bac-854a-4ad4-9a1e-557d4e507cca" width="180" />
+  <img src="https://github.com/user-attachments/assets/348fdfed-7342-4baa-b90c-729457fe9127" width="180" />
+   <img src="https://github.com/user-attachments/assets/327a7115-c14a-4969-9db5-31231aab25ff" width="180" />
+   <img src="https://github.com/user-attachments/assets/d3438572-c99c-4b95-ab09-f69f5d15f731" width="180" />
+   <img src="https://github.com/user-attachments/assets/bc88e2a5-da9b-4a74-8a6e-c1b12d84efef" width="180" />
+   <img src="https://github.com/user-attachments/assets/6c2833fe-8d5b-416f-a5b6-1dd7e84b0fb9" width="180" />
+   <img src="https://github.com/user-attachments/assets/d8db8fea-7b2a-4b1d-9fef-c27764dd7473" width="180" />
+</p>
+
+# Instalasi⚙️
+1. Clone Repository
+
+   ```bash
+   git clone https://github.com/AtqhPtr/reactnative.git
+   ```
+   ```bash
+   cd PinMeUp
+   ```
+2. Instal Dependensi
 
    ```bash
    npm install
    ```
-
-2. Start the app
+3. Jalankan Aplikasi
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+# Developer👨‍💻
+Proyek ini dikembangkan oleh Atika Putri Istiqomah untuk memenuhi syarat responsi PGPBL 2025.
