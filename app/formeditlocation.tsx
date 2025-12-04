@@ -1,26 +1,45 @@
 import * as Location from "expo-location";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, update } from "firebase/database";
 import React, { useState } from "react";
-import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import {
+  Alert,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+  View,
+  ScrollView,
+} from "react-native";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { MaterialIcons } from "@expo/vector-icons";
 
-const App = () => {
+export default function FormEditLocation() {
   const router = useRouter();
   const params = useLocalSearchParams();
 
   const {
     id,
     name: initialName,
+    category: initialCategory,
+    description: initialDescription,
+    rating: initialRating,
     coordinates: initialCoordinates,
-    accuration: initialAccuration,
+    accuracy: initialAccuracy,
   } = params;
 
-  // STATE
   const [name, setName] = useState(String(initialName ?? ""));
-  const [location, setLocation] = useState(String(initialCoordinates ?? ""));
-  const [accuration, setAccuration] = useState(String(initialAccuration ?? ""));
+  const [category, setCategory] = useState(String(initialCategory ?? ""));
+  const [description, setDescription] = useState(String(initialDescription ?? ""));
+  const [rating, setRating] = useState(Number(initialRating ?? 0));
+  const [coordinates, setCoordinates] = useState(String(initialCoordinates ?? ""));
+  const [accuracy, setAccuracy] = useState(String(initialAccuracy ?? ""));
+  const [loadingLocation, setLoadingLocation] = useState(false);
+
+  const predefinedCategories = ["Kuliner", "Pendidikan", "Wisata/Taman", "Kesehatan", "Belanja", "Kantor Publik", "Lainnya"];
+  const maxRating = 5;
 
   // FIREBASE CONFIG
   const firebaseConfig = {
@@ -36,109 +55,214 @@ const App = () => {
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  // Ambil lokasi terkini
   const getCoordinates = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
+    setLoadingLocation(true);
+
+    const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      Alert.alert("Permission Ditolak", "Izin lokasi diperlukan.");
-      return;
+      setLoadingLocation(false);
+      return Alert.alert("Izin lokasi ditolak");
     }
 
-    let loc = await Location.getCurrentPositionAsync({});
-    const coords = `${loc.coords.latitude},${loc.coords.longitude}`;
-    setLocation(coords);
-    setAccuration(loc.coords.accuracy + " m");
+    const loc = await Location.getCurrentPositionAsync({});
+    setCoordinates(loc.coords.latitude + "," + loc.coords.longitude);
+    setAccuracy(loc.coords.accuracy + " m");
+
+    setLoadingLocation(false);
   };
 
-  // Alert sukses
-  const createOneButtonAlert = (callback: () => void) =>
-    Alert.alert("Success", "Berhasil memperbarui data", [
-      { text: "OK", onPress: callback },
-    ]);
-
-  // UPDATE DATA
   const handleUpdate = () => {
-    if (!id) {
-      Alert.alert("Error", "ID lokasi tidak ditemukan.");
-      return;
-    }
+    if (!id) return Alert.alert("Error", "ID tidak ditemukan");
 
-    const pointRef = ref(db, `points/${id}`);
-
-    update(pointRef, {
-      name: name,
-      coordinates: location,
-      accuration: accuration,
+    update(ref(db, "points/" + id), {
+      name,
+      category,
+      description,
+      rating,
+      coordinates,
+      accuracy,
     })
       .then(() => {
-        createOneButtonAlert(() => {
-          router.back(); // kembali ke list lokasi
-        });
+        Alert.alert("Sukses", "Data berhasil diperbarui!", [
+          { text: "OK", onPress: () => router.back() },
+        ]);
       })
-      .catch((e) => {
-        console.error("Error updating data: ", e);
-        Alert.alert("Error", "Gagal memperbarui data");
-      });
+      .catch(() => Alert.alert("Error", "Gagal memperbarui data"));
   };
 
   return (
-    <SafeAreaProvider style={{ backgroundColor: "white" }}>
-      <SafeAreaView>
-        <Stack.Screen options={{ title: "Form Edit Location" }} />
+    <ThemedView style={styles.container}>
+      <Stack.Screen options={{ title: "Edit Lokasi" }} />
 
-        <Text style={styles.inputTitle}>Nama</Text>
+      <ScrollView contentContainerStyle={styles.scroll}>
+        <ThemedText type="title" style={styles.title}>
+          Edit Lokasi 
+        </ThemedText>
+
+        {/* Nama Lokasi */} 
+        <ThemedText style={styles.label}>Nama Lokasi</ThemedText>
         <TextInput
           style={styles.input}
-          placeholder="Isikan nama objek"
+          placeholder="Contoh: Kedai Kopi Asik"
+          placeholderTextColor="#777"
           value={name}
           onChangeText={setName}
         />
 
-        <Text style={styles.inputTitle}>Koordinat</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Isikan koordinat"
-          value={location}
-          onChangeText={setLocation}
-        />
-
-        <Text style={styles.inputTitle}>Akurasi</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Isikan akurasi lokasi"
-          value={accuration}
-          onChangeText={setAccuration}
-        />
-
-        <View style={styles.button}>
-          <Button title="Get Current Location" onPress={getCoordinates} />
+        {/* Kategori */}
+        <ThemedText style={styles.label}>Kategori</ThemedText>
+        <View style={styles.chipsContainer}>
+          {predefinedCategories.map((cat) => (
+            <TouchableOpacity
+              key={cat}
+              style={[styles.chip, category === cat && styles.chipSelected]}
+              onPress={() => setCategory(cat)}
+            >
+              <ThemedText
+                style={category === cat ? styles.chipTextSelected : styles.chipText}
+              >
+                {cat}
+              </ThemedText>
+            </TouchableOpacity>
+          ))}
         </View>
 
-        <View style={styles.button}>
-          <Button title="Save" color="#e40f0fff" onPress={handleUpdate} />
+        <TextInput
+          style={styles.input}
+          placeholder="Kategori lain (opsional)"
+          placeholderTextColor="#777"
+          value={category}
+          onChangeText={setCategory}
+        />
+
+        {/* Deskripsi */}
+        <ThemedText style={styles.label}>Deskripsi</ThemedText>
+        <TextInput
+          style={[styles.input, styles.textArea]}
+          placeholder="Deskripsikan lokasi..."
+          placeholderTextColor="#777"
+          value={description}
+          onChangeText={setDescription}
+          multiline
+        />
+
+        {/* Rating */}
+        <ThemedText style={styles.label}>Rating</ThemedText>
+        <View style={styles.ratingContainer}>
+          {Array.from({ length: maxRating }).map((_, i) => (
+            <TouchableOpacity key={i} onPress={() => setRating(i + 1)}>
+              <MaterialIcons
+                name={i < rating ? "star" : "star-border"}
+                size={30}
+                color="#FFD700"
+              />
+            </TouchableOpacity>
+          ))}
         </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+
+        {/* Lokasi GPS */}
+        <TouchableOpacity style={styles.btnSecondary} onPress={getCoordinates}>
+          {loadingLocation ? (
+            <ActivityIndicator color="#00796B" />
+          ) : (
+            <View style={styles.btnContent}>
+              <MaterialIcons name="my-location" size={20} color="#00796B" />
+              <ThemedText style={styles.btnTextSecondary}>Ambil Lokasi GPS</ThemedText>
+            </View>
+          )}
+        </TouchableOpacity>
+
+        {coordinates !== "" && (
+          <View style={styles.coordsContainer}>
+            <ThemedText style={styles.coordsLabel}>Koordinat:</ThemedText>
+            <ThemedText style={styles.coordsValue}>{coordinates}</ThemedText>
+            <ThemedText style={styles.coordsValue}>Akurasi: {accuracy}</ThemedText>
+          </View>
+        )}
+
+        {/* SAVE BUTTON */}
+        <TouchableOpacity style={styles.btnPrimary} onPress={handleUpdate}>
+          <ThemedText style={styles.btnTextPrimary}>Perbarui Lokasi</ThemedText>
+        </TouchableOpacity>
+      </ScrollView>
+    </ThemedView>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 8,
+  container: { flex: 1, padding: 20, backgroundColor: "#E0F7F4" },
+  scroll: { paddingBottom: 80, gap: 16 },
+
+  title: {
+    textAlign: "center",
+    fontSize: 22,
+    fontWeight: "700",
+    marginTop: 8,
+    color: "#000",
   },
-  inputTitle: {
-    marginLeft: 12,
-    marginTop: 12,
-    fontSize: 16,
+  label: { fontSize: 16, fontWeight: "600", color: "#000", marginTop: 6 },
+
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 12,
+    padding: 14,
+    fontSize: 15,
+    backgroundColor: "#fff",
+    elevation: 2,
+  },
+  textArea: { height: 90 },
+
+  chipsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    marginTop: 8,
+  },
+  chip: {
+    borderWidth: 1,
+    borderColor: "#999",
+    borderRadius: 20,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    backgroundColor: "#C8E6C9",
+  },
+  chipSelected: { backgroundColor: "#009688", borderColor: "#009688" },
+  chipText: { color: "#000" },
+  chipTextSelected: { color: "#fff" },
+
+  ratingContainer: { flexDirection: "row", gap: 6, marginTop: 8 },
+
+  btnPrimary: {
+    backgroundColor: "#009688",
+    padding: 16,
+    borderRadius: 14,
+    alignItems: "center",
+    elevation: 4,
+  },
+  btnTextPrimary: { color: "#fff", fontSize: 16, fontWeight: "700" },
+
+  btnSecondary: {
+    backgroundColor: "#E0F2F1",
+    padding: 14,
+    borderRadius: 12,
+    alignItems: "center",
+    elevation: 2,
+  },
+  btnContent: { flexDirection: "row", alignItems: "center", gap: 6 },
+  btnTextSecondary: {
+    color: "#00796B",
+    fontSize: 15,
     fontWeight: "600",
   },
-  button: {
-    margin: 12,
-  },
-});
 
-export default App;
+  coordsContainer: {
+    backgroundColor: "#F1F8F7",
+    padding: 12,
+    borderRadius: 10,
+    elevation: 2,
+    marginTop: 10,
+  },
+  coordsLabel: { color: "#000" },
+  coordsValue: { color: "#000" },
+});

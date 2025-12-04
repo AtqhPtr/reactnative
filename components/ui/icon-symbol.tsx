@@ -1,30 +1,27 @@
 // Fallback for using MaterialIcons on Android and web.
 
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import FontAwesome5  from '@expo/vector-icons/FontAwesome5';
-import { SymbolWeight, SymbolViewProps } from 'expo-symbols';
-import { ComponentProps } from 'react';
-import { OpaqueColorValue, type StyleProp, type TextStyle } from 'react-native';
+import { SymbolView, SymbolViewProps, SymbolWeight } from 'expo-symbols';
+import { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
-type IconMapping = Record<SymbolViewProps['name'], ComponentProps<typeof MaterialIcons>['name']>;
-type IconSymbolName = keyof typeof MAPPING;
 
 /**
  * Add your SF Symbols to Material Icons mappings here.
  * - see Material Icons in the [Icons Directory](https://icons.expo.fyi).
  * - see SF Symbols in the [SF Symbols](https://developer.apple.com/sf-symbols/) app.
  */
-const MAPPING: Record<string, React.ComponentProps<typeof MaterialIcons>["name"]> = {
+// Mapping SF Symbols → Material Icons (untuk Android & Web)
+const FALLBACK_MAPPING = {
   "house.fill": "home",
-  "paperplane.fill": "travel-explore",
   "plus.circle.fill": "add-circle",
-  "chevron.left.forwardslash.chevron.right": "code",
-  "chevron.right": "chevron-right",
-  "graduationcap.fill": "supervised-user-circle",
+  "heart.fill": "favorite",
   "map.fill": "map",
-  "list.fill": "format-list-bulleted",
-  'gmap.fill': 'maps-home-work',
-};
+  "list.bullet": "format-list-bulleted",
+  "calendar": "calendar-today",
+
+} as const;
+
+type IconSymbolName = keyof typeof FALLBACK_MAPPING;
+
 
 /**
  * An icon component that uses native SF Symbols on iOS, and Material Icons on Android and web.
@@ -36,12 +33,28 @@ export function IconSymbol({
   size = 24,
   color,
   style,
+  weight = 'regular',
 }: {
-  name: IconSymbolName;
+  name: SymbolViewProps['name'];
   size?: number;
-  color: string | OpaqueColorValue;
-  style?: StyleProp<TextStyle>;
+  color: string;
+  style?: StyleProp<ViewStyle>;  // ← PERBAIKI
   weight?: SymbolWeight;
 }) {
-  return <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />;
+  return (
+    <SymbolView
+      weight={weight}
+      tintColor={color}
+      resizeMode="scaleAspectFit"
+      name={name}
+      style={[
+        {
+          width: size,
+          height: size,
+        },
+        style,
+      ]}
+    />
+  );
 }
+

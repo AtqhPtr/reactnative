@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "reactnative",
+    "name": "",
     "slug": "reactnative",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logopin.png",
     "scheme": "reactnative",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -30,8 +30,8 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
+          "image": "./assets/images/logopin.png",
+          "imageWidth": 1000,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
           "dark": {
